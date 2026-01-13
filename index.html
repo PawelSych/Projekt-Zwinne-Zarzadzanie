@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tablica Kanban MVP</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <a class="skip-link" href="#board">Przejdź do tablicy</a>
+
+  <header class="app-header">
+    <div class="container header-row">
+      <div class="header-text">
+        <h1 class="app-title">Tablica Kanban MVP</h1>
+        <p class="app-subtitle">
+          Prosty podział zadań na To do / In progress / Done. Dane zapisują się lokalnie w przeglądarce.
+        </p>
+      </div>
+
+      <div class="header-actions">
+        <button id="addTaskBtn" class="btn btn-primary" type="button" data-action="open-modal">
+          + Dodaj zadanie
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="toolbar" aria-label="Pasek narzędzi">
+      <div class="toolbar-left"></div>
+      <div class="toolbar-right" id="toolbarRight"></div>
+    </section>
+
+    <section id="board" class="board" aria-label="Tablica Kanban">
+      <!-- TO DO -->
+      <section class="column" aria-label="Kolumna To do">
+        <header class="column-header">
+          <h2 class="column-title">To do</h2>
+          <span class="badge" id="countTodo" aria-label="Liczba zadań w To do">0</span>
+        </header>
+
+        <div class="column-body">
+          <div class="cards" id="colTodo" data-status="todo" aria-live="polite"></div>
+        </div>
+      </section>
+
+      <!-- IN PROGRESS -->
+      <section class="column" aria-label="Kolumna In progress">
+        <header class="column-header">
+          <h2 class="column-title">In progress</h2>
+          <span class="badge" id="countInprogress" aria-label="Liczba zadań w In progress">0</span>
+        </header>
+
+        <div class="column-body">
+          <div class="cards" id="colInprogress" data-status="inprogress" aria-live="polite"></div>
+        </div>
+      </section>
+
+      <!-- DONE -->
+      <section class="column" aria-label="Kolumna Done">
+        <header class="column-header">
+          <h2 class="column-title">Done</h2>
+          <span class="badge" id="countDone" aria-label="Liczba zadań w Done">0</span>
+        </header>
+
+        <div class="column-body">
+          <div class="cards" id="colDone" data-status="done" aria-live="polite"></div>
+        </div>
+      </section>
+    </section>
+
+    <div id="toastHost" class="toast-host" aria-live="polite" aria-atomic="true"></div>
+  </main>
+
+  <div id="taskModal" class="modal" aria-hidden="true">
+    <div class="modal-backdrop" data-action="close-modal"></div>
+
+    <div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="taskModalTitle">
+      <header class="modal-header">
+        <h3 id="taskModalTitle" class="modal-title">Dodaj / Edytuj zadanie</h3>
+        <button class="icon-btn" type="button" aria-label="Zamknij" data-action="close-modal">✕</button>
+      </header>
+
+      <form id="taskForm" class="modal-body" autocomplete="off">
+        <input type="hidden" id="taskId" name="taskId" value="" />
+
+        <label class="field">
+          <span class="field-label">Tytuł</span>
+          <input id="taskTitle" name="title" type="text" placeholder="Np. Zrobić README" required />
+        </label>
+
+        <label class="field">
+          <span class="field-label">Opis (opcjonalnie)</span>
+          <textarea id="taskDesc" name="description" rows="3" placeholder="Krótki opis zadania..."></textarea>
+        </label>
+
+        <label class="field">
+          <span class="field-label">Status</span>
+          <select id="taskStatus" name="status">
+            <option value="todo">To do</option>
+            <option value="inprogress">In progress</option>
+            <option value="done">Done</option>
+          </select>
+        </label>
+
+        <div class="modal-actions">
+          <button class="btn btn-primary" type="submit" data-action="submit-task">Zapisz</button>
+          <button id="cancelBtn" class="btn" type="button" data-action="close-modal">Anuluj</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <template id="taskCardTemplate">
+    <article class="card" data-id="">
+      <div class="card-main">
+        <h3 class="card-title" data-field="title">Tytuł zadania</h3>
+        <p class="card-desc" data-field="description"></p>
+      </div>
+
+      <div class="card-actions">
+        <div class="card-actions-left">
+          <button class="btn btn-small" type="button" data-action="move-left" aria-label="Przenieś w lewo">←</button>
+          <button class="btn btn-small" type="button" data-action="move-right" aria-label="Przenieś w prawo">→</button>
+        </div>
+
+        <div class="card-actions-right">
+          <button class="btn btn-small" type="button" data-action="edit">Edytuj</button>
+          <button class="btn btn-small btn-danger" type="button" data-action="delete">Usuń</button>
+        </div>
+      </div>
+    </article>
+  </template>
+
+  <script src="storage.js" defer></script>
+  <script src="app.js" defer></script>
+</body>
+</html>
