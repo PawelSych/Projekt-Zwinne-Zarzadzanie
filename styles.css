@@ -50,6 +50,7 @@ body{
   gap: var(--gap);
 }
 .app-title{
+  color: red;
   margin: 0 0 6px;
   font-size: 26px;
 }
